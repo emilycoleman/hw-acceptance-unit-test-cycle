@@ -2,15 +2,32 @@ require 'rails_helper'
 
 describe MoviesController do
     
-    describe '#create' do
+    describe "#create" do
         context "When a movie has been created" do
-            it "should increase the number of movies by 1" do
-                # expect { 
-                #     post :create, :title => {:title => '1234' }
-                # }.to change { Movie.count }
+            it "should exist in Movies" do
+                @movie_id = "1234"
+                @movie = double('fake movie').as_null_object
                 
-                Movie.create!(:title => "Cog")
-                expect(Movie.where(:title => "Cog").count).to eq(1)
+                post :create, {movie: @movie.id, movie: {:title => 'Fake Movie', :release_date => 'Sep 1, 2011', :rating => 'G', :description => 'bad', :director => ''}}
+                
+                expect(Movie.where(:title => 'Fake Movie').count).to eq(1)
+                #expect(response).to redirect_to(movie_path)
+                expect(flash[:notice]).to be_present
+            end
+        end
+    end
+    
+    describe "#destroy" do
+        context "When a movie has been destroyed" do
+            it "should not exist in Movies" do
+                @movie_id = "1234"
+                @movie = double('fake movie').as_null_object
+                expect(Movie).to receive(:find).with(@movie_id).and_return(@movie)
+                
+                get :destroy, :id => @movie_id
+                expect(Movie.where(:title => "fake movie").count).to eq(0)
+                expect(response).to redirect_to(movies_path)
+                expect(flash[:notice]).to be_present
             end
         end
     end

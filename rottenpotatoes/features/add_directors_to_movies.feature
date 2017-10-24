@@ -32,3 +32,20 @@ Scenario: can't find similar movies if we don't know director (sad path)
   When  I follow "Find Movies With Same Director"
   Then  I should be on the home page
   And   I should see "'Alien' has no director info"
+  
+Scenario: sort by ratings
+  Given I am on the home page
+  When I check the following ratings: PG
+  When I press "Refresh"
+  Then I should see "Star Wars"
+  Then I should see "Blade Runner"
+  
+Scenario: sort by title
+  Given I am on the home page
+  When I follow "Movie Title"
+  Then I should see "Blade Runner" before "Star Wars"
+  
+Scenario: sort by release date
+  Given I am on the home page
+  When I follow "Release Date"
+  Then I should see "Star Wars" before "Blade Runner"
